@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server-client";
 import StatsCard from "@/components/admin/StatsCard";
 import { ShoppingBag, Clock, Package, TrendingUp } from "lucide-react";
 import { Order } from "@/lib/types";
@@ -14,23 +14,27 @@ export default async function AdminDashboardPage({
   const t = await getTranslations("admin");
   const supabase = await createClient();
 
-  const [{ count: totalOrders }, { count: pendingOrders }, { count: totalProducts }, { data: recentOrders }] =
-    await Promise.all([
-      supabase.from("orders").select("*", { count: "exact", head: true }),
-      supabase
-        .from("orders")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "pending"),
-      supabase
-        .from("products")
-        .select("*", { count: "exact", head: true })
-        .eq("is_active", true),
-      supabase
-        .from("orders")
-        .select("*, products(name_ar, name_en)")
-        .order("created_at", { ascending: false })
-        .limit(5),
-    ]);
+  const [
+    { count: totalOrders },
+    { count: pendingOrders },
+    { count: totalProducts },
+    { data: recentOrders },
+  ] = await Promise.all([
+    supabase.from("orders").select("*", { count: "exact", head: true }),
+    supabase
+      .from("orders")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending"),
+    supabase
+      .from("products")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true),
+    supabase
+      .from("orders")
+      .select("*, products(name_ar, name_en)")
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
 
   const statusLabel = (s: string) =>
     locale === "ar"
@@ -49,7 +53,9 @@ export default async function AdminDashboardPage({
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold">{t("dashboard")}</h1>
         <p className="text-muted-foreground mt-1">
-          {locale === "ar" ? "مرحباً بك في لوحة التحكم" : "Welcome to your admin panel"}
+          {locale === "ar"
+            ? "مرحباً بك في لوحة التحكم"
+            : "Welcome to your admin panel"}
         </p>
       </div>
 
@@ -103,28 +109,38 @@ export default async function AdminDashboardPage({
             </thead>
             <tbody>
               {recentOrders?.map((order: any) => (
-                <tr key={order.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                  <td className="px-6 py-4 font-medium">{order.customer_name}</td>
+                <tr
+                  key={order.id}
+                  className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
+                >
+                  <td className="px-6 py-4 font-medium">
+                    {order.customer_name}
+                  </td>
                   <td className="px-6 py-4 text-muted-foreground">
                     {locale === "ar"
                       ? order.products?.name_ar
                       : order.products?.name_en}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[order.status]}`}>
+                    <span
+                      className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[order.status]}`}
+                    >
                       {statusLabel(order.status)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-muted-foreground">
                     {new Date(order.created_at).toLocaleDateString(
-                      locale === "ar" ? "ar-EG" : "en-EG"
+                      locale === "ar" ? "ar-EG" : "en-EG",
                     )}
                   </td>
                 </tr>
               ))}
               {(!recentOrders || recentOrders.length === 0) && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">
+                  <td
+                    colSpan={4}
+                    className="px-6 py-8 text-center text-muted-foreground"
+                  >
                     {locale === "ar" ? "لا توجد طلبات بعد" : "No orders yet"}
                   </td>
                 </tr>

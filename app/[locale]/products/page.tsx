@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server-client";
 import ProductGrid from "@/components/products/ProductGrid";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";

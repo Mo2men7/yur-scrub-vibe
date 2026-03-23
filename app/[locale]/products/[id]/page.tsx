@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server-client";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +7,11 @@ import { ChevronLeft } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import OrderForm from "@/components/orders/OrderForm";
-import { formatPrice, getProductName, getProductDescription } from "@/lib/utils";
+import {
+  formatPrice,
+  getProductName,
+  getProductDescription,
+} from "@/lib/utils";
 
 export default async function ProductDetailPage({
   params,
@@ -37,7 +41,10 @@ export default async function ProductDetailPage({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-            <Link href={`/${locale}/products`} className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Link
+              href={`/${locale}/products`}
+              className="hover:text-foreground transition-colors flex items-center gap-1"
+            >
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
               {t("products.title")}
             </Link>
@@ -59,7 +66,9 @@ export default async function ProductDetailPage({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                    <span className="font-display text-7xl font-bold text-primary/20">ys</span>
+                    <span className="font-display text-7xl font-bold text-primary/20">
+                      ys
+                    </span>
                   </div>
                 )}
               </div>
@@ -68,8 +77,16 @@ export default async function ProductDetailPage({
               {product.images && product.images.length > 1 && (
                 <div className="flex gap-3 overflow-x-auto pb-2">
                   {product.images.map((img: string, i: number) => (
-                    <div key={i} className="w-20 h-20 rounded-xl overflow-hidden bg-muted shrink-0 relative">
-                      <Image src={img} alt={`${name} ${i + 1}`} fill className="object-cover" />
+                    <div
+                      key={i}
+                      className="w-20 h-20 rounded-xl overflow-hidden bg-muted shrink-0 relative"
+                    >
+                      <Image
+                        src={img}
+                        alt={`${name} ${i + 1}`}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
                   ))}
                 </div>
@@ -84,12 +101,16 @@ export default async function ProductDetailPage({
                   {formatPrice(product.price, locale)}
                 </p>
                 {description && (
-                  <p className="text-muted-foreground leading-relaxed">{description}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {description}
+                  </p>
                 )}
               </div>
 
               <div className="bg-card border border-border rounded-2xl p-6">
-                <h2 className="font-semibold text-lg mb-5">{t("order.title")}</h2>
+                <h2 className="font-semibold text-lg mb-5">
+                  {t("order.title")}
+                </h2>
                 <OrderForm product={product} />
               </div>
             </div>
