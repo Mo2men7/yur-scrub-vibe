@@ -41,7 +41,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir={dir}
       suppressHydrationWarning
-      className={`${playfair.variable} ${cairo.variable}`}
+      className={`${locale === "ar" ? cairo.variable : playfair.variable}`}
     >
       <body>
         <ThemeProvider

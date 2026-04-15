@@ -12,8 +12,43 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import {
+  Users,
+  FileText,
+  ChevronRight,
+  ChevronLeft,
+  LayoutDashboardIcon,
+  Zap,
+  Truck,
+  CreditCard,
+  UserCog,
+  ShieldCheck,
+  Globe,
+  Building2,
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
-export default function AdminSidebar() {
+import Image from "next/image";
+import { Button } from "../ui";
+
+export default function AdminSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const pathname = usePathname();
@@ -49,6 +84,60 @@ export default function AdminSidebar() {
   };
 
   return (
+    // <Sidebar
+    //   collapsible="icon"
+    //   side={locale === "ar" ? "right" : "left"}
+    //   {...props}
+    // >
+    //   <SidebarHeader>
+    //     <div className="flex items-center gap-2 pl-1 justify-center group-data-[collapsible=icon]:pl-0">
+    //       <span className="group-data-[collapsible=icon]:hidden font-semibold text-4xl tracking-tighter text-primary">
+    //         Yur.Scrub
+    //       </span>
+    //       {/* <div className="relative group-data-[collapsible=icon]:size-6 size-16">
+    //         <Image src="/logo.svg" alt="logo" fill />
+    //       </div> */}
+    //       <p className="text-xs text-muted-foreground mt-1">Admin Panel</p>
+    //       <SidebarTrigger className="me-auto lg:hidden" />
+    //     </div>
+    //   </SidebarHeader>
+
+    //   <SidebarContent>
+    //     <SidebarGroup>
+    //       <SidebarGroupLabel>{t("main")}</SidebarGroupLabel>
+    //       <SidebarMenu>
+    //         {links.map((item) => (
+    //           <SidebarMenuItem key={item.label}>
+    //             <SidebarMenuButton
+    //               asChild
+    //               tooltip={item.label}
+    //               className={`${pathname === item.href ? "bg-primary/5 text-primary" : ""}`}
+    //             >
+    //               <Link href={item.href}>
+    //                 {item.icon && <item.icon />}
+    //                 <span>{item.label}</span>
+    //               </Link>
+    //             </SidebarMenuButton>
+    //           </SidebarMenuItem>
+    //         ))}
+    //       </SidebarMenu>
+    //     </SidebarGroup>
+    //   </SidebarContent>
+
+    //   <SidebarFooter>
+    //     <SidebarMenu>
+    //       <SidebarMenuItem>
+    //         <Button onClick={handleLogout} className="w-full">
+    //           <LogOut className="w-4 h-4 shrink-0" />
+    //           {t("logout")}
+    //         </Button>
+    //       </SidebarMenuItem>
+    //     </SidebarMenu>
+    //   </SidebarFooter>
+
+    //   <SidebarRail />
+    // </Sidebar>
+
     <aside className="w-64 shrink-0 bg-card border-e border-border min-h-screen flex flex-col">
       <div className="p-6 border-b border-border">
         <p className="font-display text-xl font-bold">
@@ -69,7 +158,7 @@ export default function AdminSidebar() {
                 "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
                 active
                   ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               <Icon className="w-4 h-4 shrink-0" />
