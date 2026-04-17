@@ -105,7 +105,8 @@
     "updatePassword": "Update Password",
     "newEmail": "New Email",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password"
+    "confirmPassword": "Confirm Password",
+    "delete": "Delete"
   },
   "common": {
     "loading": "Loading...",

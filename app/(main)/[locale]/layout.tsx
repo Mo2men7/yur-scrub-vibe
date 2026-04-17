@@ -6,6 +6,8 @@ import { Playfair_Display, Cairo } from "next/font/google";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { Toaster } from "sonner";
 
+import "../../globals.css";
+
 const locales = ["ar", "en"];
 
 const playfair = Playfair_Display({
@@ -25,7 +27,8 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  // params: Promise<{ locale: string }>;
+  params: { locale: string };
 }) {
   const { locale } = await params;
 

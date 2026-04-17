@@ -49,6 +49,7 @@ export default function AdminProductsPage() {
       const { data } = await supabase
         .from("products")
         .select("*")
+        .eq("is_active", true)
         .order("created_at", { ascending: false });
       return data || [];
     },
@@ -106,8 +107,14 @@ export default function AdminProductsPage() {
         description_ar: form.description_ar,
         description_en: form.description_en,
         price: parseFloat(form.price),
-        sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
-        colors: form.colors.split(",").map((c) => c.trim()).filter(Boolean),
+        sizes: form.sizes
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        colors: form.colors
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean),
         images: imageUrls,
         is_active: true,
       };
@@ -156,10 +163,11 @@ export default function AdminProductsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-3xl font-bold">{t("manageProducts")}</h1>
+          <h1 className="font-display text-3xl font-bold">
+            {t("manageProducts")}
+          </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {products?.length || 0}{" "}
-            {locale === "ar" ? "منتج" : "products"}
+            {products?.length || 0} {locale === "ar" ? "منتج" : "products"}
           </p>
         </div>
         <button
@@ -199,59 +207,73 @@ export default function AdminProductsPage() {
                     <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
                   </td>
                 </tr>
-              ) : products?.map((p: Product) => (
-                <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {p.images?.[0] ? (
-                        <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-muted shrink-0">
-                          <Image src={p.images[0]} alt={p.name_en} fill className="object-cover" />
+              ) : (
+                products?.map((p: Product) => (
+                  <tr
+                    key={p.id}
+                    className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {p.images?.[0] ? (
+                          <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-muted shrink-0">
+                            <Image
+                              src={p.images[0]}
+                              alt={p.name_en}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <span className="font-display text-xs font-bold text-primary/40">
+                              ys
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium">
+                            {getProductName(p, locale)}
+                          </p>
                         </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="font-display text-xs font-bold text-primary/40">ys</span>
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-medium">{getProductName(p, locale)}</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-primary">
-                    {formatPrice(p.price, locale)}
-                  </td>
-                  <td className="px-6 py-4 text-muted-foreground text-xs">
-                    {p.sizes?.join(", ")}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-1">
-                      {p.colors?.slice(0, 4).map((c) => (
-                        <span
-                          key={c}
-                          className="w-4 h-4 rounded-full border border-border"
-                          style={{ backgroundColor: c }}
-                        />
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 justify-end">
-                      <button
-                        onClick={() => openEdit(p)}
-                        className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setDeleteConfirm(p.id)}
-                        className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-600 transition"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-6 py-4 font-medium text-primary">
+                      {formatPrice(p.price, locale)}
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground text-xs">
+                      {p.sizes?.join(", ")}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-1">
+                        {p.colors?.slice(0, 4).map((c) => (
+                          <span
+                            key={c}
+                            className="w-4 h-4 rounded-full border border-border"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 justify-end">
+                        <button
+                          onClick={() => openEdit(p)}
+                          className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm(p.id)}
+                          className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-600 transition"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -265,7 +287,10 @@ export default function AdminProductsPage() {
               <h2 className="font-semibold">
                 {editing ? t("editProduct") : t("addProduct")}
               </h2>
-              <button onClick={() => setShowModal(false)} className="p-1.5 rounded-lg hover:bg-muted transition">
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-1.5 rounded-lg hover:bg-muted transition"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -277,7 +302,9 @@ export default function AdminProductsPage() {
                   <input
                     type="text"
                     value={form.name_ar}
-                    onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, name_ar: e.target.value })
+                    }
                     className={inputClass}
                     required
                   />
@@ -287,7 +314,9 @@ export default function AdminProductsPage() {
                   <input
                     type="text"
                     value={form.name_en}
-                    onChange={(e) => setForm({ ...form, name_en: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, name_en: e.target.value })
+                    }
                     className={inputClass}
                     required
                   />
@@ -299,7 +328,9 @@ export default function AdminProductsPage() {
                   <label className={labelClass}>{t("descriptionAr")}</label>
                   <textarea
                     value={form.description_ar}
-                    onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, description_ar: e.target.value })
+                    }
                     className={inputClass}
                     rows={3}
                   />
@@ -308,7 +339,9 @@ export default function AdminProductsPage() {
                   <label className={labelClass}>{t("descriptionEn")}</label>
                   <textarea
                     value={form.description_en}
-                    onChange={(e) => setForm({ ...form, description_en: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, description_en: e.target.value })
+                    }
                     className={inputClass}
                     rows={3}
                   />
@@ -358,7 +391,9 @@ export default function AdminProductsPage() {
                     accept="image/*"
                     multiple
                     className="sr-only"
-                    onChange={(e) => setImages(Array.from(e.target.files || []))}
+                    onChange={(e) =>
+                      setImages(Array.from(e.target.files || []))
+                    }
                   />
                   <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/40 transition-colors">
                     <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
@@ -366,15 +401,18 @@ export default function AdminProductsPage() {
                       {images.length > 0
                         ? `${images.length} file(s) selected`
                         : locale === "ar"
-                        ? "انقر لرفع الصور"
-                        : "Click to upload images"}
+                          ? "انقر لرفع الصور"
+                          : "Click to upload images"}
                     </p>
                   </div>
                 </label>
                 {editing?.images && editing.images.length > 0 && (
                   <div className="flex gap-2 mt-2">
                     {editing.images.map((img, i) => (
-                      <div key={i} className="w-12 h-12 rounded-lg overflow-hidden relative bg-muted">
+                      <div
+                        key={i}
+                        className="w-12 h-12 rounded-lg overflow-hidden relative bg-muted"
+                      >
                         <Image src={img} alt="" fill className="object-cover" />
                       </div>
                     ))}

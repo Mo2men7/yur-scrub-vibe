@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <p className="font-display text-3xl font-bold mb-1">
-            yur<span className="text-accent-gold">.</span>scrub
+            Yur<span className="text-accent-gold">.</span>Scrub
           </p>
           <p className="text-sm text-muted-foreground">{t("login")}</p>
         </div>
@@ -54,7 +54,9 @@ export default function AdminLoginPage() {
           className="bg-card border border-border rounded-2xl p-8 space-y-5 shadow-xl shadow-black/5"
         >
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("email")}</label>
+            <label className="block text-sm font-medium mb-1.5">
+              {t("email")}
+            </label>
             <input
               type="email"
               value={email}
@@ -66,7 +68,9 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("password")}</label>
+            <label className="block text-sm font-medium mb-1.5">
+              {t("password")}
+            </label>
             <div className="relative">
               <input
                 type={showPass ? "text" : "password"}
@@ -81,7 +85,11 @@ export default function AdminLoginPage() {
                 className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 onClick={() => setShowPass(!showPass)}
               >
-                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPass ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
