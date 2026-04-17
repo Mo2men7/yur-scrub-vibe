@@ -9,41 +9,21 @@ import {
   ShoppingBag,
   User,
   LogOut,
+  GalleryVerticalEnd,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Users,
-  FileText,
-  ChevronRight,
-  ChevronLeft,
-  LayoutDashboardIcon,
-  Zap,
-  Truck,
-  CreditCard,
-  UserCog,
-  ShieldCheck,
-  Globe,
-  Building2,
-} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-import Image from "next/image";
 import { Button } from "../ui";
 
 export default function AdminSidebar({
@@ -84,99 +64,59 @@ export default function AdminSidebar({
   };
 
   return (
-    // <Sidebar
-    //   collapsible="icon"
-    //   side={locale === "ar" ? "right" : "left"}
-    //   {...props}
-    // >
-    //   <SidebarHeader>
-    //     <div className="flex items-center gap-2 pl-1 justify-center group-data-[collapsible=icon]:pl-0">
-    //       <span className="group-data-[collapsible=icon]:hidden font-semibold text-4xl tracking-tighter text-primary">
-    //         Yur.Scrub
-    //       </span>
-    //       {/* <div className="relative group-data-[collapsible=icon]:size-6 size-16">
-    //         <Image src="/logo.svg" alt="logo" fill />
-    //       </div> */}
-    //       <p className="text-xs text-muted-foreground mt-1">Admin Panel</p>
-    //       <SidebarTrigger className="me-auto lg:hidden" />
-    //     </div>
-    //   </SidebarHeader>
+    <Sidebar
+      variant="sidebar"
+      side={locale === "ar" ? "right" : "left"}
+      {...props}
+      className="w-64 shrink-0 bg-card border-e border-border min-h-screen flex flex-col"
+    >
+      <SidebarHeader>
+        <div className="p-4 border-b border-border flex items-center justify-between">
+          <div>
+            <p className="font-display text-xl font-bold capitalize">
+              yur<span className="text-primary">.</span>scrub
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">Admin Panel</p>
+          </div>
+          <SidebarTrigger />
+        </div>
+      </SidebarHeader>
 
-    //   <SidebarContent>
-    //     <SidebarGroup>
-    //       <SidebarGroupLabel>{t("main")}</SidebarGroupLabel>
-    //       <SidebarMenu>
-    //         {links.map((item) => (
-    //           <SidebarMenuItem key={item.label}>
-    //             <SidebarMenuButton
-    //               asChild
-    //               tooltip={item.label}
-    //               className={`${pathname === item.href ? "bg-primary/5 text-primary" : ""}`}
-    //             >
-    //               <Link href={item.href}>
-    //                 {item.icon && <item.icon />}
-    //                 <span>{item.label}</span>
-    //               </Link>
-    //             </SidebarMenuButton>
-    //           </SidebarMenuItem>
-    //         ))}
-    //       </SidebarMenu>
-    //     </SidebarGroup>
-    //   </SidebarContent>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            {links.map((item) => (
+              <SidebarMenuItem key={item.label}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.label}
+                  className={`${pathname === item.href ? "bg-primary/5 text-primary" : ""}`}
+                >
+                  <Link href={item.href}>
+                    {item.icon && <item.icon />}
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
 
-    //   <SidebarFooter>
-    //     <SidebarMenu>
-    //       <SidebarMenuItem>
-    //         <Button onClick={handleLogout} className="w-full">
-    //           <LogOut className="w-4 h-4 shrink-0" />
-    //           {t("logout")}
-    //         </Button>
-    //       </SidebarMenuItem>
-    //     </SidebarMenu>
-    //   </SidebarFooter>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Button onClick={handleLogout} className="w-full">
+                <LogOut className="w-4 h-4 shrink-0" />
+                {t("logout")}
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
 
-    //   <SidebarRail />
-    // </Sidebar>
-
-    <aside className="w-64 shrink-0 bg-card border-e border-border min-h-screen flex flex-col">
-      <div className="p-6 border-b border-border">
-        <p className="font-display text-xl font-bold">
-          yur<span className="text-accent-gold">.</span>scrub
-        </p>
-        <p className="text-xs text-muted-foreground mt-1">Admin Panel</p>
-      </div>
-
-      <nav className="flex-1 p-4 space-y-1">
-        {links.map((link) => {
-          const Icon = link.icon;
-          const active = pathname === link.href;
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
-              )}
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              {link.label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="p-4 border-t border-border">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 w-full transition-all"
-        >
-          <LogOut className="w-4 h-4 shrink-0" />
-          {t("logout")}
-        </button>
-      </div>
-    </aside>
+      <SidebarRail />
+    </Sidebar>
   );
 }
