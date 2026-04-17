@@ -9,6 +9,7 @@ import { formatPrice, getProductName } from "@/lib/utils";
 import { Plus, Pencil, Trash2, Loader2, X, Upload } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { ColorPicker, SizePicker } from "@/components/admin/Pickers";
 
 type ProductForm = {
   name_ar: string;
@@ -16,8 +17,10 @@ type ProductForm = {
   description_ar: string;
   description_en: string;
   price: string;
-  sizes: string;
-  colors: string;
+  // sizes: string;
+  // colors: string;
+  sizes: string[];
+  colors: string[];
 };
 
 const emptyForm: ProductForm = {
@@ -26,8 +29,10 @@ const emptyForm: ProductForm = {
   description_ar: "",
   description_en: "",
   price: "",
-  sizes: "XS,S,M,L,XL,XXL",
-  colors: "#1B4F72,#FFFFFF,#1E8449",
+  // sizes: "XS,S,M,L,XL,XXL",
+  // colors: "#1B4F72,#FFFFFF,#1E8449",
+  sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+  colors: ["#1B4F72", "#FFFFFF", "#1E8449"],
 };
 
 export default function AdminProductsPage() {
@@ -42,6 +47,12 @@ export default function AdminProductsPage() {
   const [images, setImages] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+
+  const [colors, setColors] = useState<string[]>([
+    "#1B4F72",
+    "#FFFFFF",
+    "#1E8449",
+  ]);
 
   const { data: products, isLoading } = useQuery({
     queryKey: ["admin-products"],
@@ -70,8 +81,10 @@ export default function AdminProductsPage() {
       description_ar: p.description_ar,
       description_en: p.description_en,
       price: String(p.price),
-      sizes: p.sizes?.join(",") || "",
-      colors: p.colors?.join(",") || "",
+      // sizes: p.sizes?.join(",") || "",
+      // colors: p.colors?.join(",") || "",
+      sizes: p.sizes || [],
+      colors: p.colors || [],
     });
     setImages([]);
     setShowModal(true);
@@ -107,14 +120,16 @@ export default function AdminProductsPage() {
         description_ar: form.description_ar,
         description_en: form.description_en,
         price: parseFloat(form.price),
-        sizes: form.sizes
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        colors: form.colors
-          .split(",")
-          .map((c) => c.trim())
-          .filter(Boolean),
+        // sizes: form.sizes
+        //   .split(",")
+        //   .map((s) => s.trim())
+        //   .filter(Boolean),
+        // colors: form.colors
+        //   .split(",")
+        //   .map((c) => c.trim())
+        //   .filter(Boolean),
+        sizes: form.sizes,
+        colors: form.colors,
         images: imageUrls,
         is_active: true,
       };
@@ -361,7 +376,7 @@ export default function AdminProductsPage() {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className={labelClass}>{t("sizes")}</label>
                 <input
                   type="text"
@@ -380,6 +395,22 @@ export default function AdminProductsPage() {
                   onChange={(e) => setForm({ ...form, colors: e.target.value })}
                   className={inputClass}
                   placeholder="#1B4F72,#FFFFFF"
+                />
+              </div> */}
+
+              <div>
+                <label className={labelClass}>{t("sizes")}</label>
+                <SizePicker
+                  selected={form.sizes}
+                  onChange={(sizes) => setForm({ ...form, sizes })}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass}>{t("colors")}</label>
+                <ColorPicker
+                  selected={form.colors}
+                  onChange={(colors) => setForm({ ...form, colors })}
                 />
               </div>
 
